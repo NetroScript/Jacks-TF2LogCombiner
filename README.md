@@ -10,6 +10,24 @@ Meaning you can fit more maps into a log. (Or at least that's the aim)
 If there are any errors shown feel free to send them to me, so I can fix them.
 I made this on windows, but should also work on Linux.
 
+
+If you get an error like this:
+```python
+Traceback (most recent call last):
+  File "C:\Users\User\Documents\LogsTF Combiner\Jacks-TF2LogCombiner-master\main.py", line 163, in <module>
+    interface()
+  File "C:\Users\User\Documents\LogsTF Combiner\Jacks-TF2LogCombiner-master\main.py", line 115, in interface
+    clog = get_important(getlog(tmplog), experimental)
+  File "C:\Users\User\Documents\LogsTF Combiner\Jacks-TF2LogCombiner-master\main.py", line 63, in getlog
+    with myzipfile.open(name, "rU") as readfile:
+  File "E:\Programs\Python\lib\zipfile.py", line 1334, in open
+    raise ValueError('open() requires mode "r" or "w"')
+ValueError: open() requires mode "r" or "w"
+```
+
+Then replace `        with myzipfile.open(name, "rU") as readfile:` with `        with myzipfile.open(name, "r") as readfile:`
+
+
 ## Installation
 _____________________________________________
 
