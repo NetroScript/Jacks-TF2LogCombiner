@@ -41,6 +41,12 @@ _____________________________________________
 _____________________________________________
 
 
+### 0.1.2
+
+Fixed:
+* Improved Experimental mode (Now removes useless trigger events | FYI The experimental mode works the same as the normal one but might fuck up names)
+
+
 ### 0.1.1
 
 Fixed:

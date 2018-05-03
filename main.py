@@ -51,7 +51,8 @@ def get_important(log, experimental):
             lc -= 1
 
     for line in log[startline:endline]:
-        out += line
+        if not experimental or not ('triggered "shot_hit"' in line or 'triggered "shot_fired"' in line):
+            out += line
 
     return out
 
