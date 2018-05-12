@@ -33,6 +33,10 @@ def get_important(log, experimental):
 
         lc += 1
 
+    if endline == 0:
+        endline = lc-1
+
+
     # minimize the log a tiny bit
     if experimental:
         lc = len(log)-1
@@ -112,19 +116,23 @@ def interface():
         print("Paste the log you want to upload:")
         tmplog = input()
         u = urllib2.urlparse(tmplog)
+        cont = False
         if (u.netloc == "www.logs.tf" or u.netloc == "logs.tf") and u.path.split("/")[1].isdigit():
             clog = get_important(getlog(tmplog), experimental)
             print("Size of this log: "+sizeof_fmt(len(clog.encode('utf-8'))))
             if(wholesize + len(clog.encode('utf-8')) > 5 * 1000 * 1000):
-                a = optmenu("File would be bigger than 5 MB", ["Abort", "Ignore this log and append another log", "Combine the previous logs"])
                 if a == 0:
+                    cont = True
+                if a == 1:
                     exit()
-                if a == 2:
+                if a == 3:
                     sorted(logs, key=timesort)
                     for l in logs:
                         outlog += l
                     appending = False
             else:
+                cont = True
+            if cont:
                 logs.append(clog)
                 wholesize += len(clog.encode('utf-8'))
                 a = optmenu("Do you want to", ["Append another log", "Combine the logs"])

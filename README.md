@@ -41,6 +41,13 @@ _____________________________________________
 _____________________________________________
 
 
+### 0.1.3
+
+Fixed:
+* It would not combine logs which were combined before by this program
+* The API doesn't seem to enforce 5MB, meaning now the program allows you to upload logs > 5MB should you want to. 
+
+
 ### 0.1.2
 
 Fixed:
