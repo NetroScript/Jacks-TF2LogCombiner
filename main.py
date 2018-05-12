@@ -121,6 +121,7 @@ def interface():
             clog = get_important(getlog(tmplog), experimental)
             print("Size of this log: "+sizeof_fmt(len(clog.encode('utf-8'))))
             if(wholesize + len(clog.encode('utf-8')) > 5 * 1000 * 1000):
+                a = optmenu("File would be bigger than 5 MB - But it seems the API doesn't enforce it, so feel free to continue.", ["Continue", "Abort", "Ignore this log and append another log", "Combine the previous logs"])
                 if a == 0:
                     cont = True
                 if a == 1:
