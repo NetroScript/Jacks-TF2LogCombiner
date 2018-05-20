@@ -41,6 +41,12 @@ _____________________________________________
 _____________________________________________
 
 
+### 0.1.4
+
+Fixed:
+* The structure of 6s logs seem to differ compared to HL logs, meaning I added an additional check to my important part extractor 
+
+
 ### 0.1.3
 
 Fixed:

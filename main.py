@@ -9,6 +9,8 @@ import datetime
 import webbrowser
 import json
 
+v = "v0.1.4"
+
 
 def get_important(log, experimental):
     startline = 0
@@ -18,6 +20,11 @@ def get_important(log, experimental):
     knownnames = []
     out = ""
 
+    tournamentexists = True
+
+    if "Tournament mode started" not in "".join(log):
+        tournamentexists = False
+
     for line in log:
         if lc == 0:
             out = line+"\n"
@@ -26,8 +33,9 @@ def get_important(log, experimental):
             tcl = t[1]
             if tcl.startswith("Tournament mode started"):
                 tournament = True
-            if tcl.startswith('World triggered "Round_Start"') and (not tournament):
+            if tcl.startswith('World triggered "Round_Start"') and (not tournament) and tournamentexists:
                 startline = lc
+                tournamentexists = False
             elif tcl.startswith("Log file closed."):
                 endline = lc
 
@@ -157,7 +165,7 @@ def interface():
         "title": title[0:40],
         "map": mape[0:24],
         "key": str(key),
-        "uploader": "Jack's Log Combiner" + (" [Experimental]" if experimental else "")
+        "uploader": "Jack's Log Combiner " + v + (" [Experimental]" if experimental else "")
     }
 
     files = {
