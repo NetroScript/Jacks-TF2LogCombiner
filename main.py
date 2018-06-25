@@ -92,7 +92,7 @@ def loadsettings():
     for t in op:
         options[t] = ro[i]
         i += 1
-        
+
 
 def optmenu(question, list):
     maxv = len(list)
@@ -265,7 +265,7 @@ else:
 
 if options["u"] == "t":
     try:
-        if LooseVersion(urllib2.urlopen("https://raw.githubusercontent.com/NetroScript/Jacks-TF2LogCombiner/master/version")) > LooseVersion(v[1:]):
+        if LooseVersion(urllib2.urlopen("https://raw.githubusercontent.com/NetroScript/Jacks-TF2LogCombiner/master/version").read().decode()) > LooseVersion(v[1:]):
             print("There is a new version available. Please download it at https://github.com/NetroScript/Jacks-TF2LogCombiner")
             if optmenu("Do you want to download the file now?", ["Yes", "No"]) == 0:
                 webbrowser.open_new_tab("https://github.com/NetroScript/Jacks-TF2LogCombiner/archive/master.zip")
