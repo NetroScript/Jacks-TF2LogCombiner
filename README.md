@@ -11,23 +11,6 @@ If there are any errors shown feel free to send them to me, so I can fix them.
 I made this on windows, but should also work on Linux.
 
 
-If you get an error like this:
-```python
-Traceback (most recent call last):
-  File "C:\Users\User\Documents\LogsTF Combiner\Jacks-TF2LogCombiner-master\main.py", line 163, in <module>
-    interface()
-  File "C:\Users\User\Documents\LogsTF Combiner\Jacks-TF2LogCombiner-master\main.py", line 115, in interface
-    clog = get_important(getlog(tmplog), experimental)
-  File "C:\Users\User\Documents\LogsTF Combiner\Jacks-TF2LogCombiner-master\main.py", line 63, in getlog
-    with myzipfile.open(name, "rU") as readfile:
-  File "E:\Programs\Python\lib\zipfile.py", line 1334, in open
-    raise ValueError('open() requires mode "r" or "w"')
-ValueError: open() requires mode "r" or "w"
-```
-
-Then replace `        with myzipfile.open(name, "rU") as readfile:` with `        with myzipfile.open(name, "r") as readfile:`
-
-
 ## Installation
 _____________________________________________
 
@@ -39,6 +22,20 @@ _____________________________________________
 
 ## Changelog
 _____________________________________________
+
+
+### 0.2.0
+
+Added:
+* Settings!
+	* You can now enter your API Key at the first start and don't need to enter it again
+	* The script can now try to automatically get the map names from the supplied logs
+	* The script can now check for updates
+	* The script can now add the links to the logs used to create the combined log in the chat
+
+Fixed:
+* Possible error with the read options when reading the downloaded logs - this happened because of different python versions
+* Added some newlines for PEP 8
 
 
 ### 0.1.4

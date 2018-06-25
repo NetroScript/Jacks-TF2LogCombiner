@@ -8,8 +8,9 @@ import time
 import datetime
 import webbrowser
 import json
-
-v = "v0.1.4"
+import os.path
+from collections import OrderedDict
+from distutils.version import LooseVersion
 
 
 def get_important(log, experimental):
@@ -68,15 +69,30 @@ def get_important(log, experimental):
 
     return out
 
+
 def getlog(url):
     logid = urllib2.urlparse(url).path.split("/")[1]
     myzipfile = zipfile.ZipFile(BytesIO(urllib2.urlopen("http://logs.tf/logs/log_"+logid+".log.zip").read()), "r")
     out = []
     for name in myzipfile.namelist():
-        with myzipfile.open(name, "rU") as readfile:
+        with myzipfile.open(name, "r") as readfile:
             for line in codecs.iterdecode(readfile, 'utf8', errors='ignore'):
                 out.append(line)
     return out
+
+
+def getmap(url):
+    return urllib2.urlopen(url).read().decode('utf-8').split('<h3 id="log-map">')[1].split("</h3>")[0]
+
+
+def loadsettings():
+    i = 0
+    with open("settings") as f:
+        ro = f.read().split("\n")
+    for t in op:
+        options[t] = ro[i]
+        i += 1
+        
 
 def optmenu(question, list):
     maxv = len(list)
@@ -113,6 +129,8 @@ def timesort(log):
 def interface():
     appending = True
     logs = []
+    maps = []
+    ids = []
     wholesize = 0
     outlog = ""
     a = optmenu("Do you want to use experimental mode for further minifying? (Expect bugs)", ["No", "Yes"])
@@ -142,6 +160,10 @@ def interface():
             else:
                 cont = True
             if cont:
+                if options["m"] == "t":
+                    maps.append(getmap(tmplog))
+                if options["o"] == "t":
+                    ids.append("https://logs.tf/" + u.path.split("/")[1])
                 logs.append(clog)
                 wholesize += len(clog.encode('utf-8'))
                 a = optmenu("Do you want to", ["Append another log", "Combine the logs"])
@@ -154,12 +176,43 @@ def interface():
         else:
             print("Invalid URL supplied - try again")
     print("Size of all logs: "+sizeof_fmt(wholesize))
-    print("Please enter your Logs.tf API - Key")
-    key = input()
+    key = options["k"]
     print("Please enter a title for your log (max 40 characters)")
     title = input()
-    print("Please enter the maps (max 24 chars)")
-    mape = input()
+
+    if options["o"] == "t":
+        outlog += outlog.split("\n")[-2][:24] + ' "Jack\'s Log Combiner<0><Console><Console>" say "The following logs were combined: ' + " & ".join(ids) + '"\n'
+
+    mape = "Error"
+    if options["m"] == "t":
+        try:
+            maps = list(OrderedDict.fromkeys(maps))
+            if len(" + ".join(maps)) < 25:
+                mape = " + ".join(maps)
+            elif len(",".join(maps)) < 25:
+                mape = ",".join(maps)
+            else:
+                nmaps = list()
+                for m in maps:
+                    p = m.split("_")
+                    if len(p) == 2:
+                        nmaps.append(p[1])
+                    else:
+                        nmaps.append("_".join(p[1:-1]))
+                if len(" + ".join(nmaps)) < 25:
+                    mape = " + ".join(nmaps)
+                elif len(",".join(nmaps)) < 25:
+                    mape = ",".join(nmaps)
+                else:
+                    raise Exception("We can't make the mapname small enough")
+
+        except Exception:
+            print("An error happened parsing the maps, please enter the map now yourself.")
+            print("Please enter the maps (max 24 chars)")
+            mape = input()
+    else:
+        print("Please enter the maps (max 24 chars)")
+        mape = input()
 
     payload = {
         "title": title[0:40],
@@ -177,5 +230,46 @@ def interface():
         webbrowser.open_new_tab("https://www.logs.tf"+x["url"])
     else:
         print(r.text)
+
+with open("version") as f:
+    v = "v" + f.read()
+
+options = {}
+op = ["u", "m", "o", "k"]
+if os.path.isfile("settings"):
+    loadsettings()
+
+else:
+    o = []
+    print("Seems like this is the first time using this script for you.")
+    print("That's why you can choose some basic actions now.")
+    if optmenu("Do you want that this script checks for updates?", ["Yes", "No"]) == 0:
+        o.append("t")
+    else:
+        o.append("f")
+    if optmenu("Do you want that this script tries to automatically generate the map names?", ["Yes", "No"]) == 0:
+        o.append("t")
+    else:
+        o.append("f")
+    if optmenu("Do you want that a chat message with the source logs is created?", ["Yes", "No"]) == 0:
+        o.append("t")
+    else:
+        o.append("f")
+    print("Please enter your Logs.tf API - Key")
+    o.append(input())
+    print("If you entered any wrong settings or want to change them, just delete the settings file.")
+    outopt = "\n".join(o)
+    with open("settings", "w") as s:
+        s.write(outopt)
+    loadsettings()
+
+if options["u"] == "t":
+    try:
+        if LooseVersion(urllib2.urlopen("https://raw.githubusercontent.com/NetroScript/Jacks-TF2LogCombiner/master/version")) > LooseVersion(v[1:]):
+            print("There is a new version available. Please download it at https://github.com/NetroScript/Jacks-TF2LogCombiner")
+            if optmenu("Do you want to download the file now?", ["Yes", "No"]) == 0:
+                webbrowser.open_new_tab("https://github.com/NetroScript/Jacks-TF2LogCombiner/archive/master.zip")
+    except Exception:
+        print("We were unable to check for updates")
 
 interface()
