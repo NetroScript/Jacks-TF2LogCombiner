@@ -10,6 +10,8 @@ Meaning you can fit more maps into a log. (Or at least that's the aim)
 If there are any errors shown feel free to send them to me, so I can fix them.
 I made this on windows, but should also work on Linux.
 
+If you don't like python you can alternatively find a userscript version directly for logs.tf [here](https://github.com/NetroScript/Jacks-LogsTF-On-Page-Combiner).
+
 
 ## Installation
 _____________________________________________
